@@ -1,0 +1,61 @@
+pipeline {
+agent  any 
+tools {
+      maven 'maven'
+    }
+	environment {
+      DOCKER_TAG = getVersion()
+    }
+stages {
+
+stage('PollSCM') {
+    steps {
+checkout([$class: 'GitSCM', branches: [[name: 'master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/kiranpayyavuala/sampleproject']]])
+script {
+        tags = sh(script: "git tag --sort=v:refname | tail -5 ", returnStdout: true).trim()
+}
+}
+}
+
+stage('CHOICE TAG') {
+    steps {
+    script {
+def tag_response = input message: '${tags}',
+
+parameters: [string(defaultValue: '${tags}', name: 'TAG')]
+
+/*parameters: [choice(choices: "${tags}",  description: 'blah', name: '')]*/
+env.tag_response = tag_response
+}
+
+}
+}
+
+
+stage('Maven Build'){
+            steps{
+                sh "mvn clean package"
+            }
+        }
+		
+stage('Docker Build'){
+            steps{
+                sh "docker build . -t kiranpayyavuala/myapp:${DOCKER_TAG} "
+            }
+}
+
+stage('DockerHub Push'){
+            steps{
+                withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerHubPwd')]) {
+                    sh "docker login -u kiranpayyavuala -p ${dockerHubPwd}"
+                }
+                
+                sh "docker push kiranpayyavuala/myapp:${DOCKER_TAG} "
+            }
+}
+}
+}
+def getVersion(){
+    def commitHash = sh label: '', returnStdout: true, script: 'git tag'
+    return commitHash
+}
