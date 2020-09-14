@@ -1,0 +1,25 @@
+---
+ - hosts: localhost
+   vars:
+     my_arg: "{{ image1 }}"
+   become: true
+   tasks:
+     - name: Remove All Docker Images
+       shell:  docker rmi -f $(docker images -a -q)
+     - name: stop all docker containers
+       shell: docker stop $(docker ps -a -q)
+     - name: remove all docker containers
+       shell: docker rm $(docker ps -a -q)
+     - name: Docker Image pull From kiranpayyavuala/myapp Repo
+       command: docker pull kiranpayyavuala/myapp:{{ my_arg }}
+     - name:  create contaner
+       docker_container:
+         name: container1
+         state: present
+         image: kiranpayyavuala/myapp:{{ my_arg }}
+         ports:
+           - "8080:8080"
+
+
+
+# ansible-playbook all1.yml --extra-vars " my_arg=version1.0"
