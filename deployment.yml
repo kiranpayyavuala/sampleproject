@@ -1,5 +1,5 @@
 ---
- - hosts: {{my_host}}
+ - hosts: all
    vars:
      my_arg: "{{ image1 }}"
    become: true
