@@ -1,0 +1,26 @@
+---
+ - hosts: {{my_host}}
+   vars:
+     my_arg: "{{ image1 }}"
+   become: true
+   tasks:
+     - name: Remove All Docker Images
+       shell:  docker rmi -f $(docker images -a -q)
+       ignore_errors: yes
+     - name: Stop a container
+       docker_container:
+         name: container1
+         state: stopped
+     - name: remove container
+       docker_container:
+         name: container1
+         state: absent
+     - name: Docker Image pull From kiranpayyavuala/myapp Repo
+       command: docker pull kiranpayyavuala/myapp:{{ my_arg }}
+     - name:  create contaner
+       docker_container:
+         name: container1
+         state: present
+         image: kiranpayyavuala/myapp:{{ my_arg }}
+         ports:
+           - "8080:8080"
