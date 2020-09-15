@@ -1,5 +1,5 @@
 ---
- - hosts: dev
+ - hosts: ubuntu
    vars:
      my_arg: "{{ image1 }}"
    become: true
