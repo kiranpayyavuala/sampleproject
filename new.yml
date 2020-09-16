@@ -1,0 +1,11 @@
+---
+ - hosts: all
+   vars:
+     my_arg: "{{ image1 }}"
+   become: true
+   tasks:
+     - name: Remove All Docker Images
+       shell:  docker rmi -f $(docker images -a -q)
+       ignore_errors: yes
+     - name: Docker Image pull From kiranpayyavuala/myapp Repo
+       command: docker pull kiranpayyavuala/myapp:{{ my_arg }}
