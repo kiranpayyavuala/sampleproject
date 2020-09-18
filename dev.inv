@@ -1,2 +1,2 @@
-[ubuntu]
-18.188.1.90
+[dev]
+3.137.149.17 ansible_user=root
