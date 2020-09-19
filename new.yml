@@ -8,4 +8,4 @@
        shell:  docker rmi -f $(docker images -a -q)
        ignore_errors: yes
      - name: Docker Image pull From kiranpayyavuala/myapp Repo
-       command: docker pull kiranpayyavuala/myapp:{{ my_arg }}
+       command: docker pull kiranpayyavuala/myapp:{{ image1 }}
