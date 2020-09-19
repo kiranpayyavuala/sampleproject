@@ -1,2 +1,2 @@
 [dev]
-18.216.126.56 ansible_user=root
+<ip> ansible_user=root
