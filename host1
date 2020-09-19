@@ -1,2 +1,2 @@
 [dev]
-3.137.149.17 ansible_user=root
+<ec2_ip_address> ansible_user=root
